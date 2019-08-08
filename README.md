@@ -9,3 +9,4 @@ De ESP32-CAM gebruiken we als lijnsensor voor een andere robot.
 
 WoF_CAM:
 Met een ESP32-CAM als camera module en 2 servo's bouwen en programmeren we een lopende robot cq Walker.
+
