@@ -1,5 +1,5 @@
 # ESP32-Cam-Walker
-Programma's en informatie om met de ESP32-Cam aan de slag te gaan
+Programma's en informatie om met de ESP32-Cam binnen de Arduino-IDE aan de slag te gaan
 
 ESP32_beeld:
 Met behulp van een ESP32-CAM leggen we een beeld vast en sturen dat via de seriele poort als lage resolutie beeld door.
