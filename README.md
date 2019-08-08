@@ -5,7 +5,7 @@ ESP32_beeld:
 Met behulp van een ESP32-CAM leggen we een beeld vast en sturen dat via de seriele poort als lage resolutie beeld door.
 
 ESP32_lijnsensor:
-De ESP32-CAM gebruiken we als lijnsensor voor een andere robot.
+De ESP32-CAM gebruiken we als lijnsensor voor een robot.
 
 WoF_CAM:
 Met een ESP32-CAM als camera module en 2 servo's bouwen en programmeren we een lopende robot cq Walker.
