@@ -3,7 +3,7 @@
 // ***                                                                      ***
 // ***  HCC!Robotica                                a.vreugdenhil@hccnet.nl ***
 // ***                                                                      ***
-// ***  Doel: Mbv een ESP32-CAM een beeld sensor bouwen.                    ***
+// ***  Doel: Mbv een ESP32-CAM een beeld-sensor bouwen.                    ***
 // ***                                                                      ***
 // ***                          https://github.com/AVTech1/ESP32-Cam-Walker ***
 // ****************************************************************************
@@ -41,13 +41,11 @@ esp_err_t camera_beeld(){
     ESP_LOGE(TAG, "Camera Capture Failed");
     return ESP_FAIL;
   }
-  // int pixels_to_skip = s_state->width / 80;
-
   for (int ih = 0; ih < s_state->height; ih += 8)
   {
-    for (int iw = 0; iw < s_state->width * 2; iw += 5)
-    {
-      uint8_t pixel = (s_state->buf[iw + (ih )]);
+    for (int iw = 0; iw < s_state->width; iw += 5)
+    {                 
+      uint8_t pixel = (s_state->buf[iw + (ih * s_state->width)]);
       if (pixel < 26)
         printf(" ");
       else if (pixel < 51)
@@ -71,6 +69,7 @@ esp_err_t camera_beeld(){
       }
       printf("\n");
     }
+    printf("\n");
   //**************************************************************************
   //Geef het geheugen voor de framebuffer weeer vrij.
   esp_camera_fb_return(s_state);
@@ -121,9 +120,6 @@ void setup()
     return;
   }
 
-  //drop down frame size for higher initial frame rate
-  // sensor_t * s = esp_camera_sensor_get();   // Moet dit nog ??
-
   WiFi.begin(ssid, password);
   delay(500);
 
@@ -163,9 +159,9 @@ void setup()
 // **************************************************************************** 
 void loop() {
   delay(500);   // normaal 35
-  ledcWrite(3,255);  // Zet Flash_LED 100% AAN                          
-  camera_beeld();
-  ledcWrite(3,0);    // Zet Flash_LED UIT, anders wordt het een beetje heet :-(   
+  ledcWrite(3,255);   // Zet Flash_LED 100% AAN                          
+  camera_beeld();     // Zet beeldframe in geheugen en zend via seriele poort weg 
+  ledcWrite(3,0);     // Zet Flash_LED UIT, anders wordt het een beetje heet :-(   
 }
 // ****************************************************************************
 // *** Einde Grootte HoofdLus *************************************************

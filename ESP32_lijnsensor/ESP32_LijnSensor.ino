@@ -1,14 +1,11 @@
 // ****************************************************************************
 // ***  ESP32_LijnSensor.ino                           A. Vreugdenhil @2019 ***
 // ***                                                                      ***
-// ***  ESP32_LijnSensor                            a.vreugdenhil@hccnet.nl ***
+// ***  HCC!Robotica                                a.vreugdenhil@hccnet.nl ***
 // ***                                                                      ***
 // ***  Doel: Mbv een ESP32-CAM een lijnsensor bouwen.                      ***
 // ***                                                                      ***
-// ***                                                                      ***
-// ***                                                                      ***
-// ***                                                                      ***
-// ***                                                                      ***
+// ***                          https://github.com/AVTech1/ESP32-Cam-Walker ***
 // ****************************************************************************
 
 const char* ssid = "AV_Retro";              // E-Tech Wireless Router WLRT03
@@ -35,6 +32,7 @@ void startCameraServer();
 // ****************************************************************************                   
 uint8_t lijn_sensor[32];
 uint8_t Teller, Tel2, px, Lus;
+const int Led0 = 4;                         // Flash_light
 
 // ****************************************************************************
 // *** Laad een beeldlijn in het geheugen *************************************
@@ -59,7 +57,7 @@ esp_err_t camera_capture_lijn(){
 }
 
 // ****************************************************************************
-// *** Print alleen de lijn ***************************************************
+// *** Print alleen de lijn, alle 32 metingen *********************************
 // ****************************************************************************
 void Lijn() { 
   for (int Tell = 0; Tell < 32; Tell += 1)   
@@ -118,7 +116,6 @@ void Filter_c(){
   Serial.println(); 
 }
 
-
 // ****************************************************************************
 // *** Grootte Setup Routine  *************************************************
 // **************************************************************************** 
@@ -163,9 +160,6 @@ void setup()
     return;
   }
 
-  // drop down frame size for higher initial frame rate
-  // sensor_t * s = esp_camera_sensor_get();   // Moet dit nog ??
-  
   WiFi.begin(ssid, password);
   delay(500);
 
@@ -184,6 +178,10 @@ void setup()
   
   WiFi.softAP((WiFi.softAPIP().toString()+"_"+(String)apssid).c_str(), appassword);    
 
+  // Setup onboard Flash-LED on GPIO4
+  ledcSetup(3, 2000, 8); // 2000 hz PWM, 8-bit resolution
+  ledcAttachPin(Led0, 3); 
+
   for (int i=0;i<5;i++) 
   {
     ledcWrite(3,50);  // flash led Flitsen ten teken dat alles opgestart is.
@@ -200,15 +198,14 @@ void setup()
 // *** Grootte HoofdLus  ******************************************************
 // **************************************************************************** 
 void loop() {
-  delay(350);           // normaal 35
+  delay(500);           // normaal 35
   ledcWrite(3,255);     // Zet Flash_LED 100% AAN                          
   camera_capture_lijn();  // Neem een beeld op met de camera module.
   ledcWrite(3,0);       // Zet Flash_LED UIT, anders wordt het een beetje heet :-(   
 
   Lijn();               // Print de lijn als "grijs-tint". 
-  // Filter_a();           // Filter de Zwarte Lijn uit de data.  
-  Filter_c();           // Lijn detectie obv pixel-contrast verschil                 
-
+  // Filter_a();           // Detecteer de Zwarte Lijn obv grijswaarde.  
+  Filter_c();           // Lijn detectie obv pixel-contrast verschil.                 
 }
 // ****************************************************************************
 // *** Einde Grootte HoofdLus *************************************************
